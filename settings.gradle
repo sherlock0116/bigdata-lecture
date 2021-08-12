@@ -1,0 +1,29 @@
+rootProject.name = 'bigdata-lecture'
+
+include 'bdl-antlr'
+include 'bdl-calcite'
+include 'bdl-flink'
+include 'bdl-hadoop'
+include 'bdl-hive'
+include 'bdl-kafka'
+include 'bdl-ldap'
+include 'bdl-spark'
+include 'bdl-thrift'
+include 'bdl-util'
+include 'bdl-zookeeper'
+
+include 'bdl-springboot-admin'
+project(':bdl-springboot-admin').projectDir = new File("bdl-springboot/bdl-springboot-admin")
+
+include 'bdl-springboot-erupt'
+project(':bdl-springboot-erupt').projectDir = new File("bdl-springboot/bdl-springboot-erupt")
+
+include 'bdl-springboot-mybatis'
+project(':bdl-springboot-mybatis').projectDir = new File("bdl-springboot/bdl-springboot-mybatis")
+
+include 'bdl-springcloud-consul'
+project(':bdl-springcloud-consul').projectDir = new File("bdl-springcloud/bdl-springcloud-consul")
+
+include 'bdl-springcloud-eureka'
+project(':bdl-springcloud-eureka').projectDir = new File("bdl-springcloud/bdl-springcloud-eureka")
+

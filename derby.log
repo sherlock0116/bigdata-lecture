@@ -1,0 +1,13 @@
+----------------------------------------------------------------
+Thu Mar 25 22:38:37 CST 2021:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.10.2.0 - (1582446): instance a816c00e-0178-69d2-a9a3-000007deda20 
+on database directory /Users/sherlock/IdeaProjects/Bigdata/bigdata-lecture/metastore_db with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
+Loaded from file:/Users/sherlock/.gradle/caches/modules-2/files-2.1/org.apache.derby/derby/10.10.2.0/47eba6736561c377f2132f5e09e2fe8084d899a9/derby-10.10.2.0.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.8.0_251-b08
+user.dir=/Users/sherlock/IdeaProjects/Bigdata/bigdata-lecture
+os.name=Mac OS X
+os.arch=x86_64
+os.version=10.16
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''

@@ -1,0 +1,16 @@
+*************************** 1. row ***************************
+         JobId: 32049
+         Label: label_test_tmp_baokuan_1618919833
+         State: CANCELLED
+      Progress: ETL:N/A; LOAD:N/A
+          Type: BROKER
+       EtlInfo: N/A
+      TaskInfo: cluster:N/A; timeout(s):3600; max_filter_ratio:0.1
+      ErrorMsg: type:ETL_RUN_FAIL; msg:errCode = 2, detailMessage = Broker list path failed.path=$,broker=TNetworkAddress(hostname:10.0.15.133, port:8000),msg=invalid path. scheme is null, cause by: null
+    CreateTime: 2021-04-20 19:57:13
+  EtlStartTime: 2021-04-20 19:57:17
+ EtlFinishTime: 2021-04-20 19:57:17
+ LoadStartTime: 2021-04-20 19:57:17
+LoadFinishTime: 2021-04-20 19:57:17
+           URL: N/A
+    JobDetails: {"Unfinished backends":{},"ScannedRows":0,"TaskNumber":0,"All backends":{},"FileNumber":0,"FileSize":0}

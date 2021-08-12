@@ -1,0 +1,320 @@
+// Licensed to the Apache Software Foundation (ASF) under one or more
+// contributor license agreements.  See the NOTICE file distributed with
+// this work for additional information regarding copyright ownership.
+// The ASF licenses this file to You under the Apache License, Version 2.0
+// (the "License"); you may not use this file except in compliance with
+// the License.  You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+ScalaCompileOptions.metaClass.daemonServer = true
+ScalaCompileOptions.metaClass.fork = true
+ScalaCompileOptions.metaClass.useAnt = false
+ScalaCompileOptions.metaClass.useCompileDaemon = false
+
+buildscript {
+    repositories {
+        maven {url '/Users/sherlock/environment/repositories/maven'}
+        maven {url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+        maven {url 'http://maven.oschina.net/content/groups/public/'}
+        maven {url 'https://plugins.gradle.org/m2/'}
+        mavenCentral()
+        jcenter()
+    }
+    apply from: "$rootDir/gradle/dependencies.gradle"
+    dependencies {
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:${versions.springboot}"
+    }
+}
+
+ext {
+    gradleVersion = versions.gradle
+    minJavaVersion = '8'
+    defaultMaxHeapSize = '2g'
+    defaultJvmArgs = ['-Xss4m', '-XX:+UseParallelGC']
+    userMaxForks = project.hasProperty('maxParallelForks') ? maxParallelForks.toInteger() : null
+    userMaxTestRetries = project.hasProperty('maxTestRetries') ? maxTestRetries.toInteger() : 0
+    userMaxTestRetryFailures = project.hasProperty('maxTestRetryFailures') ? maxTestRetryFailures.toInteger() : 0
+    generatedDocsDir = new File("${project.rootDir}/docs/generated")
+    commitId = project.hasProperty('commitId') ? commitId : null
+}
+
+apply from: "$rootDir/wrapper.gradle"
+
+allprojects {
+    apply plugin: 'idea'
+    apply plugin: 'java'
+    apply plugin: 'scala'
+    apply plugin: 'antlr'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+
+    group group
+    version version
+
+}
+
+subprojects {
+    repositories {
+        maven {url '/Users/sherlock/environment/repositories/maven'}
+        maven {url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+        maven {url 'http://maven.oschina.net/content/groups/public/'}
+        maven {url 'https://plugins.gradle.org/m2/'}
+        mavenCentral()
+        jcenter()
+    }
+
+    // scalatest will run with other tests engines by JunitPlatform:
+    test {
+        useJUnitPlatform {
+            includeEngines 'scalatest'
+        }
+
+        // Always run tests, even when nothing changed.
+        dependsOn 'cleanTest'
+
+        // Show test results.
+        testLogging {
+            events "passed", "skipped", "failed"
+        }
+    }
+
+    // 将 java 与 scala 的源代码目录全映射到 scala 上
+    // gradle compileScala时就能同时编译java与scala的源代码
+    sourceSets {
+        main {
+            scala {
+                srcDirs = ['src/main/scala', 'src/main/java']
+            }
+            resources {
+                srcDir 'src/main/resources'
+            }
+            java {
+                srcDirs = []
+            }
+        }
+
+        test {
+            scala {
+                srcDirs = ['src/test/scala', 'src/test/java']
+            }
+            resources {
+                srcDir 'src/main/resources'
+            }
+            java {
+                srcDirs = []
+            }
+        }
+    }
+
+    dependencies {
+        implementation libs.scalaLibrary
+//            implementation libs.scalaCompiler
+        implementation libs.slf4jApi
+        implementation libs.lombok
+        // junit5
+        testImplementation libs.jupiterApi
+        testRuntimeOnly libs.jupiterEngine
+        // junit4/3
+        testCompileOnly libs.junit
+        testImplementation libs.scalatest
+        testRuntimeOnly libs.vintageEngine
+        // 兼容 scalatest
+        testRuntime libs.junitScalatest
+    }
+
+    sourceCompatibility = minJavaVersion
+    targetCompatibility = minJavaVersion
+    [compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
+
+    // create default src dir for main and test
+    // eg: src/main/java, src/main/scala, src/main/resources,
+    task 'createSrcDirs' {
+        doLast {
+            sourceSets*.java.srcDirs*.each { it.mkdirs() }
+            sourceSets*.scala.srcDirs*.each { it.mkdirs() }
+            sourceSets*.resources.srcDirs*.each { it.mkdirs() }
+        }
+    }
+
+    // enable running :dependencies task recursively on all subprojects
+    // eg: ./gradlew allDeps
+    task allDeps(type: DependencyReportTask) {}
+    // enable running :dependencyInsight task recursively on all subprojects
+    // eg: ./gradlew allDepInsight --configuration runtime --dependency com.fasterxml.jackson.core:jackson-databind
+    task allDepInsight(type: DependencyInsightReportTask) doLast {}
+
+}
+
+project(':bdl-antlr') {
+    println "Building Project:${project.name} with Scala version ${versions.scala}"
+    dependencies {
+        implementation libs.antlr4Runtime
+    }
+}
+
+project(':bdl-calcite') {
+    println "Building Project:${project.name} with Scala version ${versions.scala}"
+
+    dependencies {
+        implementation libs.calciteCore
+        runtimeOnly libs.mysqlDriver
+    }
+}
+
+project(':bdl-flink') {
+    println "Building Project:${project.name} with Scala version ${versions.scala}"
+
+    dependencies {
+        implementation libs.flinkCore
+        implementation libs.flinkClients
+        implementation libs.flinkScala
+        implementation libs.flinkStreamScala
+        implementation libs.flinkJava
+        implementation libs.flinkStreamJava
+        implementation libs.flinkJavaTableApi
+        implementation libs.flinkScalaTableApi
+        implementation libs.flinkParquet
+        implementation libs.flinkConnectorKafka
+        implementation libs.flinkConectorFileSystem
+        implementation libs.hadoopClient
+        implementation project(':bdl-util')
+        // compileOnly when package
+        implementation libs.flinkJavaTableApiBridge
+        implementation libs.flinkScalaTableApiBridge
+        implementation libs.flinkPlanner
+        implementation libs.blinkPlanner
+
+        implementation libs.flinkBackendRocksDB
+        runtimeOnly libs.mysqlDriver
+
+    }
+}
+
+project(':bdl-hadoop') {
+    println "Building Project:${project.name} with Scala version ${versions.scala}"
+
+    dependencies {
+        implementation libs.hadoopClient
+        implementation libs.hadoopCommon
+        implementation libs.hadoopHdfs
+        implementation libs.commonsIo
+    }
+}
+
+project(':bdl-hive') {
+    println "Building Project:${project.name} with Scala version ${versions.scala}"
+
+    dependencies {
+        implementation libs.hcatalogClient
+        implementation libs.hiveMetastore
+    }
+}
+
+project(':bdl-kafka') {
+    println "Building Project:${project.name} with Scala version ${versions.scala}"
+
+    dependencies {
+        implementation libs.kafkaClients
+    }
+}
+
+project(':bdl-ldap') {
+    println "Building Project:${project.name} with Scala version ${versions.scala}"
+
+    dependencies {
+        implementation libs.jldap
+    }
+}
+
+project(':bdl-spark') {
+    println "Building Project:${project.name} with Scala version ${versions.scala}"
+
+    dependencies {
+        implementation libs.kafkaClients
+        implementation libs.sparkCore
+        implementation libs.sparkSql
+        implementation libs.sparkStreaming
+        implementation libs.sparkStreamingBindKafka010
+        implementation libs.sparkHive
+        implementation libs.mysqlDriver
+    }
+}
+
+project(':bdl-thrift') {
+    println "Building Project:${project.name} with Scala version ${versions.scala}"
+
+    dependencies {
+        implementation libs.libthrift
+    }
+}
+
+project(':bdl-util') {println "Building Project:${project.name} with Scala version ${versions.scala}"}
+
+project(':bdl-zookeeper') {
+    println "Building Project:${project.name} with Scala version ${versions.scala}"
+
+    dependencies {
+        implementation libs.curatorFramework
+        implementation libs.curatorRecipes
+    }
+}
+
+project(':bdl-springboot-admin') {
+    println "Building Project:${project.name} with Scala version ${versions.scala}"
+
+    dependencies {
+        implementation "org.springframework.boot:spring-boot-starter-web"
+        implementation "org.springframework.boot:spring-boot-starter-actuator"
+        implementation "de.codecentric:spring-boot-admin-starter-server:${versions.springbootAdmin}"
+        implementation "de.codecentric:spring-boot-admin-starter-client:${versions.springbootAdmin}"
+    }
+}
+
+project(':bdl-springboot-mybatis') {
+    println "Building Project:${project.name} with Scala version ${versions.scala}"
+
+    dependencies {
+        implementation "org.springframework.boot:spring-boot-starter-web"
+        implementation "org.springframework.boot:spring-boot-starter-actuator"
+        implementation "org.springframework.boot:spring-boot-starter-jdbc"
+        implementation libs.mybatisPlusStarter
+//        implementation "org.mybatis.spring.boot:mybatis-spring-boot-starter:1.3.2"
+        testImplementation "org.springframework.boot:spring-boot-starter-test"
+        runtimeOnly libs.mysqlDriver
+    }
+
+//    configurations {
+//        testImplementation.exclude(group:"org.junit.vintage", module:"junit-vintage-engine")
+//        testImplementation.exclude(group:"org.junit.jupiter", module:"junit-jupiter-engine")
+//    }
+
+}
+
+project(':bdl-springboot-erupt') {
+    println "Building Project:${project.name} with Scala version ${versions.scala}"
+
+    dependencies {
+        implementation libs.eruptUpms
+        implementation libs.eruptSecurity
+        implementation libs.eruptWeb
+        runtimeOnly libs.mysqlDriver
+    }
+}
+
+project(':bdl-springcloud-eureka') {
+    println "Building Project:${project.name} with Scala version ${versions.scala}"
+
+}
+
+project(':bdl-springcloud-consul') {
+    println "Building Project:${project.name} with Scala version ${versions.scala}"
+
+}
+

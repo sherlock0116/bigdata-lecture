@@ -1,0 +1,29 @@
+server:
+  port: 9191
+
+spring:
+  profiles: server
+  application:
+    name: dev-admin-server
+
+---
+server:
+  port: 9292
+
+spring:
+  profiles: client
+  application:
+    name: test-admin-client
+  boot:
+    admin:
+      client:
+        url: http://localhost:9191
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: ALWAYS

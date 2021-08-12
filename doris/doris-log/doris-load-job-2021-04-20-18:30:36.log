@@ -1,0 +1,16 @@
+*************************** 1. row ***************************
+         JobId: 32025
+         Label: label_test_tmp_baokuan_1618914636
+         State: FINISHED
+      Progress: ETL:100%; LOAD:100%
+          Type: BROKER
+       EtlInfo: unselected.rows=0; dpp.abnorm.ALL=7; dpp.norm.ALL=402
+      TaskInfo: cluster:N/A; timeout(s):3600; max_filter_ratio:0.1
+      ErrorMsg: N/A
+    CreateTime: 2021-04-20 18:30:36
+  EtlStartTime: 2021-04-20 18:30:37
+ EtlFinishTime: 2021-04-20 18:30:37
+ LoadStartTime: 2021-04-20 18:30:37
+LoadFinishTime: 2021-04-20 18:30:37
+           URL: http://10.0.15.181:18040/api/_load_error_log?file=__shard_33/error_log_insert_stmt_a5f37c41c42a4bc6-a2c79996276c2bc5_a5f37c41c42a4bc6_a2c79996276c2bc5
+    JobDetails: {"Unfinished backends":{"a5f37c41c42a4bc6-a2c79996276c2bc4":[]},"ScannedRows":409,"TaskNumber":1,"All backends":{"a5f37c41c42a4bc6-a2c79996276c2bc4":[11002]},"FileNumber":1,"FileSize":35875}
