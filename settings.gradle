@@ -2,28 +2,46 @@ rootProject.name = 'bigdata-lecture'
 
 include 'bdl-antlr'
 include 'bdl-calcite'
+include 'bdl-debezium'
 include 'bdl-flink'
 include 'bdl-hadoop'
 include 'bdl-hive'
+include 'bdl-jdbc'
 include 'bdl-kafka'
 include 'bdl-ldap'
+include 'bdl-netty'
+include 'bdl-quartz'
+include 'bdl-schema'
 include 'bdl-spark'
 include 'bdl-thrift'
 include 'bdl-util'
 include 'bdl-zookeeper'
 
+include 'bdl-java'
+project(':bdl-java').projectDir = new File("bdl-lang/bdl-java")
+
+include 'bdl-scala'
+project(':bdl-scala').projectDir = new File("bdl-lang/bdl-scala")
+
 include 'bdl-springboot-admin'
 project(':bdl-springboot-admin').projectDir = new File("bdl-springboot/bdl-springboot-admin")
 
-include 'bdl-springboot-erupt'
-project(':bdl-springboot-erupt').projectDir = new File("bdl-springboot/bdl-springboot-erupt")
+include 'bdl-springboot-ldap'
+project(':bdl-springboot-ldap').projectDir = new File("bdl-springboot/bdl-springboot-ldap")
 
 include 'bdl-springboot-mybatis'
 project(':bdl-springboot-mybatis').projectDir = new File("bdl-springboot/bdl-springboot-mybatis")
+
+include 'bdl-springboot-security'
+project(':bdl-springboot-security').projectDir = new File("bdl-springboot/bdl-springboot-security")
+
+include 'bdl-springboot-erupt'
+project(':bdl-springboot-erupt').projectDir = new File("bdl-springboot/bdl-springboot-erupt")
 
 include 'bdl-springcloud-consul'
 project(':bdl-springcloud-consul').projectDir = new File("bdl-springcloud/bdl-springcloud-consul")
 
 include 'bdl-springcloud-eureka'
 project(':bdl-springcloud-eureka').projectDir = new File("bdl-springcloud/bdl-springcloud-eureka")
+include 'bdl-scala'
 

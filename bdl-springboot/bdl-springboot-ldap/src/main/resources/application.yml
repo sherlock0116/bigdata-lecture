@@ -1,0 +1,19 @@
+logging:
+  level: info
+
+server:
+  port: 8012
+
+spring:
+  application:
+    name: springboot-ldap
+
+ldap:
+  url: ldap://ads.homedo.com:389
+  userDn: CN=Administrator,CN=Users,DC=homedo,DC=com
+  userPwd: BIGdata@1203
+  base: OU=研发中心,OU=河姆渡(上海),DC=homedo,DC=com
+  domainName: '@homedo.com'
+
+jwt:
+  key: bigdata

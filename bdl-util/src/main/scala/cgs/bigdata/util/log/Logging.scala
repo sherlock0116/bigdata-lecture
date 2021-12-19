@@ -9,39 +9,62 @@ import org.slf4j._
  */
 trait Logging {
 	
-	lazy val logger: Logger = LoggerFactory.getLogger(this.getClass)
+	@transient  private var _log: Logger = _
 	
-	def trace(message: => Any): Unit = {
-		if (logger.isTraceEnabled) {
-			logger.trace(message.toString)
+	protected def logName: String = {
+		this.getClass.getName.stripSuffix("$")
+	}
+	
+	protected def log: Logger = {
+		if (_log == null) {
+			_log = LoggerFactory.getLogger(logName)
 		}
+		_log
 	}
 	
-	def debug(message: => Any): Unit = {
-		if (logger.isDebugEnabled) {
-			logger.debug(message.toString)
-		}
+	// Log methods that take only a String
+	protected def logInfo(msg: => String): Unit = {
+		if (log.isInfoEnabled) log.info(msg)
 	}
 	
-	def info(message: => Any): Unit = {
-		if (logger.isInfoEnabled) {
-			logger.info(message.toString)
-		}
+	protected def logDebug(msg: => String): Unit = {
+		if (log.isDebugEnabled) log.debug(msg)
 	}
 	
-	def warn(message: => Any): Unit = {
-		logger.warn(message.toString)
+	protected def logTrace(msg: => String): Unit = {
+		if (log.isTraceEnabled) log.trace(msg)
 	}
 	
-	def warn(message: => Any, t: Throwable): Unit = {
-		logger.warn(message.toString, t)
+	protected def logWarning(msg: => String): Unit = {
+		if (log.isWarnEnabled) log.warn(msg)
 	}
 	
-	def error(message: => Any, t: Throwable): Unit = {
-		logger.error(message.toString, t)
+	protected def logError(msg: => String): Unit = {
+		if (log.isErrorEnabled) log.error(msg)
 	}
 	
-	def error(message: => Any): Unit = {
-		logger.error(message.toString)
+	// Log methods that take Throwables (Exceptions/Errors) too
+	protected def logInfo(msg: => String, throwable: Throwable): Unit = {
+		if (log.isInfoEnabled) log.info(msg, throwable)
+	}
+	
+	protected def logDebug(msg: => String, throwable: Throwable): Unit = {
+		if (log.isDebugEnabled) log.debug(msg, throwable)
+	}
+	
+	protected def logTrace(msg: => String, throwable: Throwable): Unit = {
+		if (log.isTraceEnabled) log.trace(msg, throwable)
+	}
+	
+	protected def logWarning(msg: => String, throwable: Throwable): Unit = {
+		if (log.isWarnEnabled) log.warn(msg, throwable)
+	}
+	
+	protected def logError(msg: => String, throwable: Throwable): Unit = {
+		if (log.isErrorEnabled) log.error(msg, throwable)
+	}
+	
+	protected def isTraceEnabled(): Boolean = {
+		log.isTraceEnabled
 	}
 }

@@ -1,8 +1,10 @@
 package cgs.bdl.ldap
 
-import com.novell.ldap.LDAPConnection
+import org.apache.directory.ldap.client.api.LdapNetworkConnection
+import org.junit.runner.RunWith
+import org.scalatest.BeforeAndAfterAll
 import org.scalatest.funsuite.AnyFunSuite
-import org.scalatest.{BeforeAndAfterAll, FunSuite}
+import org.scalatestplus.junit.JUnitRunner
 
 import scala.util.{Failure, Success, Try}
 
@@ -13,37 +15,29 @@ import scala.util.{Failure, Success, Try}
  * @Date
  */
 
-@RunWith(classOf[JunitRunner])
+@RunWith(classOf[JUnitRunner])
 class LdapTest extends AnyFunSuite with BeforeAndAfterAll {
 	
-	val ldap_host: String = "172.16.11.254"
-	val ldap_port: Int = LDAPConnection.DEFAULT_PORT
-	val ldap_basedn: String = "OU=研发中心,OU=河姆渡(上海),DC=homedo,DC=com"
+	// 172.16.220.230
+	val ldap_host: String = "ads.homedo.com"
+	val ldap_port: Int = 389
+	val ldap_dn: String = "OU=研发中心,OU=河姆渡(上海)"
 	val ldap_username: String = "yiguanldap"
 	val ldap_passwd: String = "BIGdata@1203"
 	
-	var triedCnxt: Try[LDAPConnection] = _
-	
-	test ("hmd ldap connect") {
-		
+	test ("hmd ldap simple connect") {
+		val triedCnxt: Try[LdapNetworkConnection] = Try {
+			val cnxt: LdapNetworkConnection = new LdapNetworkConnection(ldap_host, ldap_port)
+			cnxt
+		}
 		triedCnxt match {
 			case Success(cnxt) =>
 				println(s"=====> Get Ldap Connection: $cnxt")
+				cnxt.close()
 			case Failure(exception) =>
 				println(s"=====> Exception: ${exception.getMessage}")
 		}
-	}
-	
-	override protected def beforeAll(): Unit = {
-		triedCnxt = Try {
-			val cnxt: LDAPConnection = new LDAPConnection()
-			cnxt.connect(ldap_host, ldap_port)
-			cnxt.bind(LDAPConnection.LDAP_V3, ldap_basedn, ldap_passwd.getBytes("UTF-8"))
-			cnxt
-		}
-		
 		
 	}
 	
-	override protected def afterAll(): Unit = super.afterAll()
 }

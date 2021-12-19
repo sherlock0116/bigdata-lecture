@@ -38,37 +38,43 @@ if ( !versions.scala.contains('-') ) {
 versions += [
         gradleVersionsPlugin: '0.28.0',
         antlr: '4.5.3',
+        apiAll: '2.0.1',
         calcite: '1.18.0',
         commonsCodec: '1.15',
         commonsIo: '2.4',
         commonsLang: '3.8.1',
         curator: '5.1.0',
+        debezium: '1.6.3.Final',
         erupt: '1.7.3',
         flink: '1.11.3',
         gradle: '5.6.4',
         gson: '2.8.5',
-        hadoop: '2.7.7',
+        hadoop: '3.3.1',
         hamcrest: '2.2',
         hive: '2.3.7',
         jldap: '4.3',
-        junit: '4.12',
+        junit: '4.13',
         jupiter: '5.6.0',
         json4s: '3.6.9',
-        jackson: '2.9.8',
+        jackson: '2.10.5',
         kafka: '2.4.1',
         lombok: '1.16.20',
         log4j: '1.2.17',
         mybatisPlus: '3.3.2',
         mysqlDriver: '8.0.11',
+        netty: '4.1.67.Final',
+        quartz: '2.3.2',
         scalaLogging: '3.9.2',
         scalatest: '3.1.1',
+        scalatestPlus: '3.2.5.0',
+        specs2Junit: '4.10.6',
         springboot: '2.1.0.RELEASE',
         springbootAdmin: '2.1.0',
         slf4j: '1.7.30',
         spark: '2.4.7',
         thrift: '0.14.1',
         zinc: '1.3.5',
-        zookeeper: '3.5.8'
+        zookeeper: '3.5.9'
 ]
 
 libs += [
@@ -79,9 +85,13 @@ libs += [
         commonsCodec: "commons-codec:commons-codec:${versions.commonsCodec}",
         commonsIo: "commons-io:commons-io:${versions.commonsIo}",
         commonsLang: "org.apache.commons:commons-lang3:${versions.commonsLang}",
+        apiAll: "org.apache.directory.api:api-all:${versions.apiAll}",
         // curator
         curatorFramework: "org.apache.curator:curator-framework:$versions.curator",
         curatorRecipes: "org.apache.curator:curator-recipes:$versions.curator",
+        // debezium
+        debeziumEmbedded: "io.debezium:debezium-embedded:$versions.debezium",
+        debeziumApi: "io.debezium:debezium-api:$versions.debezium",
         // erupt
         eruptUpms: "xyz.erupt:erupt-upms:$versions.erupt",
         eruptSecurity: "xyz.erupt:erupt-security:$versions.erupt",
@@ -115,11 +125,16 @@ libs += [
         hiveMetastore: "org.apache.hive:hive-metastore:$versions.hive",
         hamcrest: "org.hamcrest:hamcrest:$versions.hamcrest",
         // json
-        jacksonDatabind: "com.fasterxml.jackson.core:jackson-databind:$versions.jackson",
-        json4sJackson: "org.json4s:json4s-jackson_$versions.baseScala:$versions.json4s",
+        jacksonCore: "com.fasterxml.jackson.core:jackson-core:${versions.jackson}",
+        jacksonAnnotations: "com.fasterxml.jackson.core:jackson-annotations:${versions.jackson}",
+        jacksonDatabind: "com.fasterxml.jackson.core:jackson-databind:${versions.jackson}",
+        jacksonYaml: "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${versions.jackson}",
+        jacksonModuleScala: "com.fasterxml.jackson.module:jackson-module-scala_${versions.baseScala}:${versions.jackson}",
+        json4sJackson: "org.json4s:json4s-jackson_${versions.baseScala}:${versions.json4s}",
         // junit
         junit: "junit:junit:$versions.junit",
         jupiterApi: "org.junit.jupiter:junit-jupiter-api:${versions.jupiter}",
+        jupiterParams: "org.junit.jupiter:junit-jupiter-params:${versions.jupiter}",
         jupiterEngine: "org.junit.jupiter:junit-jupiter-engine:${versions.jupiter}",
         vintageEngine: "org.junit.vintage:junit-vintage-engine:${versions.jupiter}",
         junitScalatest: "co.helmethair:scalatest-junit-runner:0.1.8",
@@ -138,12 +153,18 @@ libs += [
         mybatisPlusStarter: "com.baomidou:mybatis-plus-boot-starter:$versions.mybatisPlus",
         // mysql
         mysqlDriver: "mysql:mysql-connector-java:$versions.mysqlDriver",
+        // netty
+        nettyAll: "io.netty:netty-all:${versions.netty}",
+        // quartz
+        quartz: "org.quartz-scheduler:quartz:${versions.quartz}",
+        quartzJobs: "org.quartz-scheduler:quartz-jobs:${versions.quartz}",
         // scala
         scalaLibrary: "org.scala-lang:scala-library:$versions.scala",
         scalaCompiler: "org.scala-lang:scala-compiler:$versions.scala",
         scalaReflect: "org.scala-lang:scala-reflect:$versions.scala",
         scalaLogging: "com.typesafe.scala-log:scala-logging_$versions.baseScala:$versions.scalaLogging",
         scalatest: "org.scalatest:scalatest_$versions.baseScala:$versions.scalatest",
+        scalatestPlus: "org.scalatestplus:junit-4-13_${versions.baseScala}:${versions.scalatestPlus}",
         // slf4j
         slf4jApi: "org.slf4j:slf4j-api:$versions.slf4j",
         slf4jTolog4j: "org.slf4j:slf4j-log4j12:$versions.slf4j",
@@ -154,6 +175,8 @@ libs += [
         sparkStreamingBindKafka08: "org.apache.spark:spark-streaming-kafka-0-8_$versions.baseScala:$versions.spark",
         sparkStreamingBindKafka010: "org.apache.spark:spark-streaming-kafka-0-10_$versions.baseScala:$versions.spark",
         sparkHive: "org.apache.spark:spark-hive_$versions.baseScala:$versions.spark",
+        // specs
+        specs2Junit: "org.specs2:specs2-junit_${versions.baseScala}:${versions.specs2Junit}",
         // zk
         zookeeper: "org.apache.zookeeper:zookeeper:$versions.zookeeper"
 ]
